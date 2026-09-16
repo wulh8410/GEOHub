@@ -148,6 +148,13 @@ class ArtifactBus:
             if self.final_root.exists():
                 raise ValueError(f"Run directory already exists: {self.final_root}") from exc
             raise
+        # Windows does not expose POSIX directory descriptors or fsync semantics.
+        # The rename above is still atomic on the same NTFS volume; keep the
+        # stronger durability barrier for platforms that support it.
+        if os.name == "nt":
+            self._published = True
+            self.root = self.final_root
+            return self.final_root
         directory_descriptor = os.open(self.final_root.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | os.O_NOFOLLOW)
         try:
             os.fsync(directory_descriptor)

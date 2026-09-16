@@ -20,6 +20,9 @@ Homepage = "https://github.com/yaojingang/geo-seo-hub"
 Repository = "https://github.com/yaojingang/geo-seo-hub"
 
 [project.optional-dependencies]
+web = [
+  "Flask>=3.0,<4",
+]
 dev = [
   "pytest>=8,<9",
   "setuptools>=68",

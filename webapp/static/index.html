@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GEO Check</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/">GEO <span>Check</span></a>
+      <nav>
+        <button class="nav active" data-view="new">新建诊断</button>
+        <button class="nav" data-view="history">历史报告</button>
+      </nav>
+      <div class="online">在线</div>
+    </header>
+    <main>
+      <section id="new-view" class="view active">
+        <div class="hero">
+          <img src="/assets/geo-globe.png" alt="" />
+          <div class="eyebrow">双引擎 · 公开网站快照</div>
+          <h1>把官网地址交给 <em>AI</em></h1>
+          <p>一次执行两套可解释诊断，直接在页面里查看或下载两份报告。</p>
+          <form id="diagnosis-form">
+            <label class="url-field"><span>官网地址</span><input id="url" type="url" inputmode="url" placeholder="https://www.example.com" required /></label>
+            <button class="primary" type="submit">开始诊断</button>
+          </form>
+          <p id="form-error" class="error" role="alert"></p>
+        </div>
+        <section id="job-panel" class="job-panel hidden" aria-live="polite">
+          <div class="status-line"><div><span id="status-dot" class="dot"></span><strong id="job-status">正在准备诊断</strong><small id="job-url"></small></div><span id="job-time"></span></div>
+          <div class="engine-lanes">
+            <article><div><strong>GEOHub 深度诊断</strong><p>AI 可见性 · 引用就绪度 · 内容结构</p></div><b id="geo-state">等待执行</b></article>
+            <article><div><strong>页面 SEO 快检</strong><p>元数据 · 标题 · 链接 · 图片 · robots · sitemap</p></div><b id="seo-state">等待执行</b></article>
+          </div>
+          <div id="result-grid" class="result-grid hidden">
+        <article class="report-card"><div class="card-label">GEOHub 深度诊断</div><div id="geo-score" class="score">—</div><p id="geo-caption">正在生成可追溯的站点诊断。</p><div class="report-actions"><button id="open-geo" class="secondary" type="button">查看完整报告</button><button id="download-geo" class="ghost" type="button">下载 HTML 报告</button></div></article>
+        <article class="report-card"><div class="card-label">页面 SEO 快检</div><div id="seo-score" class="score">—</div><p id="seo-caption">正在检查页面基础 SEO 信号。</p><div class="report-actions"><button id="open-seo" class="secondary" type="button">查看完整报告</button><button id="download-seo" class="ghost" type="button">下载 HTML 报告</button></div></article>
+          </div>
+        </section>
+      </section>
+      <section id="history-view" class="view"><div class="history-head"><div><div class="eyebrow">历史记录</div><h2>已完成的诊断报告</h2></div><button id="refresh-history" class="secondary">刷新列表</button></div><div id="history-list" class="history-list"></div></section>
+    </main>
+    <dialog id="report-dialog"><div class="dialog-head"><strong id="report-title">诊断报告</strong><button id="close-report">关闭</button></div><iframe id="report-frame" title="诊断报告"></iframe></dialog>
+    <script src="/app.js"></script>
+  </body>
+</html>

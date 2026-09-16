@@ -1,0 +1,17 @@
+services:
+  geohub:
+    build:
+      context: .
+    image: geohub:0.7.0
+    volumes:
+      - ./runs:/workspace/runs
+    entrypoint: ["geo-seo-hub"]
+  geocheck:
+    build:
+      context: .
+    image: geohub:0.7.0
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./runs:/workspace/runs
+    entrypoint: ["python", "-m", "webapp.server"]

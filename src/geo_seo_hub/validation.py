@@ -107,6 +107,22 @@ def read_bounded_regular_file(path: Path, *, max_bytes: int, field: str) -> byte
     candidate = Path(path)
     if max_bytes < 0 or ".." in candidate.parts:
         raise ValueError(f"{field} path is unsafe")
+    # Windows has no O_DIRECTORY/O_NOFOLLOW equivalent.  Keep the POSIX
+    # descriptor walk below for supported platforms, and use an explicit
+    # regular-file/symlink check for local NTFS paths.
+    if os.name == "nt":
+        try:
+            metadata = os.lstat(candidate)
+            if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+                raise ValueError(f"{field} must be a regular file")
+            if metadata.st_size > max_bytes:
+                raise ValueError(f"{field} exceeds {max_bytes} bytes")
+            payload = candidate.read_bytes()
+            if len(payload) > max_bytes:
+                raise ValueError(f"{field} exceeds {max_bytes} bytes")
+            return payload
+        except OSError as exc:
+            raise ValueError(f"{field} is unavailable or unsafe: {path}") from exc
     directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     file_flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
     descriptors: list[int] = []
